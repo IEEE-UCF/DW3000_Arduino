@@ -1027,7 +1027,7 @@ void DW3000Class::clearSystemStatus() {
  */
 void DW3000Class::pullLEDHigh(int led) {
     if (led > 2) return;
-    led_status = led_status + (1 << led);
+    led_status = led_status | (1 << led);
     write(0x05, 0x0C, led_status);
 }
 
