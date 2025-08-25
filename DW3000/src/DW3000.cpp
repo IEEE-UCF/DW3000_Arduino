@@ -20,7 +20,8 @@
 DW3000Class DW3000;
 
 #define DEBUG_OUTPUT 0 // Turn to 1 to get all reads, writes, etc. as info in the console
-#define ANTENNA_DELAY 0x3FCA // For calibration purposes; the smaller the number, the longer the ranging results
+
+int antenna_delay = 0x3FCA; // For calibration purposes; the smaller the number, the longer the ranging results
 
 int led_status = 0;
 
@@ -318,7 +319,7 @@ void DW3000Class::writeSysConfig() {
 
     write(0x0E, 0x02, 0x01); //Enable full CIA diagnostics to get signal strength information
 
-    setTXAntennaDelay(ANTENNA_DELAY); //set default antenna delay
+    setTXAntennaDelay(antenna_delay); //set default antenna delay
 }
 
 /*
@@ -566,7 +567,7 @@ void DW3000Class::setFrameLength(int frameLen) { // set Frame length in Bytes
  @param data Can be anything between 0 and 0xFFFF
 */
 void DW3000Class::setTXAntennaDelay(int delay) {
-    ANTENNA_DELAY = delay;
+    antenna_delay = delay;
     write(0x01, 0x04, delay);
 }
 
@@ -898,7 +899,7 @@ void DW3000Class::prepareDelayedTX() {
 
     uint32_t exact_tx_timestamp = (long long)(rx_ts + TRANSMIT_DELAY) >> 8;
 
-    long long calc_tx_timestamp = ((rx_ts + TRANSMIT_DELAY) & ~TRANSMIT_DIFF) + ANTENNA_DELAY;
+    long long calc_tx_timestamp = ((rx_ts + TRANSMIT_DELAY) & ~TRANSMIT_DIFF) + antenna_delay;
 
     uint32_t reply_delay = calc_tx_timestamp - rx_ts;
 
